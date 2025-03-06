@@ -34,7 +34,7 @@ fn main() -> ! {
     let clocks = rcc
         .cfgr
         .use_hse(Hertz::MHz(8))
-        .sysclk(Hertz::MHz(16))
+        .sysclk(Hertz::MHz(72))
         .freeze(&mut flash.acr);
 
     // configure the user led
@@ -43,7 +43,7 @@ fn main() -> ! {
 
     // configure SysTick to generate an exception every second
     core.SYST.set_clock_source(SystClkSource::Core);
-    core.SYST.set_reload(clocks.sysclk().raw());
+    core.SYST.set_reload(16_000_000); // 1/4 second
     core.SYST.enable_counter();
     core.SYST.enable_interrupt();
 
