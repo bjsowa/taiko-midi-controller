@@ -3,7 +3,14 @@ name = "taiko-midi-controller"
 version = "0.1.0"
 edition = "2021"
 license = "MIT"
+description = "A MIDI controller for the Taiko no Tatsujin drum controller"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[[bin]]
+name = "taiko-midi-controller"
+test = false
 
 [dependencies]
+cortex-m = "0.7.7"
+cortex-m-rt = { version = "0.7.5", features = ["device"] }
+panic-semihosting = "0.6.0"
+stm32f1xx-hal = { version = "0.10.0", features = ["rt", "stm32f103"] }

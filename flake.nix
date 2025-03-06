@@ -7,16 +7,30 @@
     crane.url = "github:ipetkov/crane";
 
     flake-utils.url = "github:numtide/flake-utils";
+
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, crane, flake-utils, ... }:
+  outputs = { self, nixpkgs, crane, flake-utils, rust-overlay, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
-
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ (import rust-overlay) ];
+        };
         # inherit (pkgs) lib;
 
-        craneLib = crane.mkLib pkgs;
+        cargoTarget = "thumbv7m-none-eabi";
+
+        # craneLib = crane.mkLib pkgs;
+        craneLib = (crane.mkLib pkgs).overrideToolchain (p:
+          p.rust-bin.stable.latest.default.override {
+            targets = [ cargoTarget ];
+            extensions = [ "rust-src" ];
+          });
 
         src = craneLib.cleanCargoSource ./.;
 
@@ -25,12 +39,9 @@
           inherit src;
           strictDeps = true;
 
-          buildInputs = [
-            # Add additional build inputs here
-          ];
+          cargoExtraArgs = "--target ${cargoTarget}";
 
-          # Additional environment variables can be set directly
-          # MY_CUSTOM_VAR = "some value";
+          doCheck = false;
         };
 
         # Build *just* the cargo dependencies, so we can reuse
@@ -46,18 +57,11 @@
           # Build the crate as part of `nix flake check` for convenience
           inherit taiko-midi-controller-crate;
 
-          # Run clippy (and deny all warnings) on the crate source,
-          # again, reusing the dependency artifacts from above.
-          #
-          # Note that this is done as a separate derivation so that
-          # we can block the CI if there are issues here, but not
-          # prevent downstream consumers from building our crate by itself.
           my-crate-clippy = craneLib.cargoClippy (commonArgs // {
             inherit cargoArtifacts;
             cargoClippyExtraArgs = "--all-targets -- --deny warnings";
           });
 
-          # Check formatting
           my-crate-fmt = craneLib.cargoFmt { inherit src; };
         };
 
@@ -67,12 +71,9 @@
           # Inherit inputs from checks.
           checks = self.checks.${system};
 
-          # Additional dev-shell environment variables can be set directly
-          # MY_CUSTOM_DEVELOPMENT_VAR = "something else";
-
-          # Extra inputs can be added here; cargo and rustc are provided by default.
-          packages = [
-            # pkgs.ripgrep
+          packages = with pkgs; [
+            pkgsCross.arm-embedded.buildPackages.gdb
+            openocd
           ];
         };
 
