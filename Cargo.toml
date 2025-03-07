@@ -19,16 +19,23 @@ embassy-executor = { version = "0.7.0", features = [
     "executor-thread",
     "defmt",
 ] }
+embassy-futures = { version = "0.1.1", features = ["defmt"] }
 embassy-stm32 = { version = "0.2.0", features = [
     "defmt",
     "memory-x",
     "stm32f103c8",
     "time-driver-any",
 ] }
-embassy-time = "0.4.0"
+embassy-time = { version = "0.4.0", features = ["defmt"] }
+embassy-usb = { version = "0.4.0", features = ["defmt"] }
 panic-probe = { version = "0.3.2", features = ["print-defmt"] }
 stm32f1xx-hal = { version = "0.10.0", features = ["rt", "stm32f103"] }
 
 [profile.release]
 lto = true
 strip = true
+opt-level = "s"
+
+[profile.dev]
+lto = true
+opt-level = "s"
