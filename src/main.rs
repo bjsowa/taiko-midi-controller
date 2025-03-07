@@ -1,16 +1,3 @@
-// #![no_std]
-// #![no_main]
-
-// extern crate panic_semihosting;
-
-// use cortex_m_rt::{entry, exception};
-
-// #[entry]
-// fn main() -> ! {
-//     // println!("Hello, world!");
-//     loop {}
-// }
-
 #![no_main]
 #![no_std]
 

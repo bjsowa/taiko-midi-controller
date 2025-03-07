@@ -73,6 +73,8 @@
 
           packages = with pkgs; [
             pkgsCross.arm-embedded.buildPackages.gdb
+
+            gcc-arm-embedded-13
             openocd
           ];
         };

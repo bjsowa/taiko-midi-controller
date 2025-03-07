@@ -1,0 +1,32 @@
+{
+    "configurations": [
+        {
+            "showDevDebugOutput": "parsed",
+            "cwd": "${workspaceRoot}",
+            "executable": "target/thumbv7m-none-eabi/debug/taiko-midi-controller",
+            "name": "Debug Firmware",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "preLaunchTask": "Cargo Build (debug)",
+            "device": "stm32f103",
+            "configFiles": [
+                "openocd.cfg"
+            ],
+        }
+        {
+            "showDevDebugOutput": "parsed",
+            "cwd": "${workspaceRoot}",
+            "executable": "target/thumbv7m-none-eabi/debug/taiko-midi-controller",
+            "name": "Attach Firmware",
+            "request": "attach",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "preLaunchTask": "Cargo Build (debug)",
+            "device": "stm32f103",
+            "configFiles": [
+                "openocd.cfg"
+            ]
+        }
+    ]
+}

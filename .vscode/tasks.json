@@ -1,0 +1,62 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Cargo Build (debug)",
+            "type": "shell",
+            "command": "cargo",
+            "args": ["build"],
+            "problemMatcher": [
+                "$rustc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Cargo Build (release)",
+            "type": "shell",
+            "command": "cargo",
+            "args": ["build", "--release"],
+            "problemMatcher": [
+                "$rustc"
+            ],
+            "group": "build"
+        },
+		{
+			"type": "shell",
+			"label": "Firmware flash (debug)",
+			"dependsOn": [
+				"Cargo Build (debug)"
+			],
+			"command": "openocd -f openocd.cfg -c \"program target/thumbv7m-none-eabi/debug/taiko-midi-controller verify reset exit\"",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"label": "Firmware flash (release)",
+			"dependsOn": [
+				"Cargo Build (release)"
+			],
+			"command": "openocd -f openocd.cfg -c \"program target/thumbv7m-none-eabi/release/taiko-midi-controller verify reset exit\"",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared",
+				"showReuseMessage": true,
+				"clear": false
+			},
+			"problemMatcher": []
+		},
+    ]
+}

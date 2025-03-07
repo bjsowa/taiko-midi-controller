@@ -14,3 +14,7 @@ cortex-m = "0.7.7"
 cortex-m-rt = { version = "0.7.5", features = ["device"] }
 panic-semihosting = "0.6.0"
 stm32f1xx-hal = { version = "0.10.0", features = ["rt", "stm32f103"] }
+
+[profile.release]
+lto = true
+strip = true
