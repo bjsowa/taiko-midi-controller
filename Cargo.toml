@@ -12,9 +12,8 @@ test = false
 [dependencies]
 cortex-m = { version = "0.7.7", features = ["critical-section-single-core"] }
 cortex-m-rt = { version = "0.7.5", features = ["device"] }
-defmt = "0.3.10"
+defmt = { version = "0.3.10", features = ["encoding-raw"] }
 defmt-rtt = "0.4.1"
-# defmt-semihosting = "0.1.0"
 embassy-executor = { version = "0.7.0", features = [
     "arch-cortex-m",
     "executor-thread",
@@ -27,7 +26,7 @@ embassy-stm32 = { version = "0.2.0", features = [
     "time-driver-any",
 ] }
 embassy-time = "0.4.0"
-panic-semihosting = "0.6.0"
+panic-probe = { version = "0.3.2", features = ["print-defmt"] }
 stm32f1xx-hal = { version = "0.10.0", features = ["rt", "stm32f103"] }
 
 [profile.release]

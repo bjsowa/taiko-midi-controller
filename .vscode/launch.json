@@ -1,32 +1,53 @@
 {
     "configurations": [
         {
-            "showDevDebugOutput": "parsed",
-            "cwd": "${workspaceRoot}",
-            "executable": "target/thumbv7m-none-eabi/debug/taiko-midi-controller",
-            "name": "Debug Firmware",
+            "preLaunchTask": "Cargo Build (debug)",
+            "type": "probe-rs-debug",
+            "cwd": "${workspaceFolder}",
             "request": "launch",
-            "type": "cortex-debug",
-            "servertype": "openocd",
-            "preLaunchTask": "Cargo Build (debug)",
-            "device": "stm32f103",
-            "configFiles": [
-                "openocd.cfg"
+            "name": "Debug Firmware",
+            "flashingConfig": {
+                "flashingEnabled": true,
+            },
+            "chip": "STM32F103C8Tx",
+            "coreConfigs": [
+                {
+                    "programBinary": "target/thumbv7m-none-eabi/debug/taiko-midi-controller",
+                    "rttEnabled": true,
+                    "rttChannelFormats": [
+                        {
+                            "channelNumber": 0,
+                            // Format RTT data as String data
+                            "dataFormat": "String",
+                            // Include host-side timestamps for every line of data transferred from the target RTT output
+                            "showTimestamps": true
+                        },
+                    ]
+                }
             ],
-        }
+        },
         {
-            "showDevDebugOutput": "parsed",
-            "cwd": "${workspaceRoot}",
-            "executable": "target/thumbv7m-none-eabi/debug/taiko-midi-controller",
-            "name": "Attach Firmware",
-            "request": "attach",
-            "type": "cortex-debug",
-            "servertype": "openocd",
             "preLaunchTask": "Cargo Build (debug)",
-            "device": "stm32f103",
-            "configFiles": [
-                "openocd.cfg"
-            ]
+            "type": "probe-rs-debug",
+            "cwd": "${workspaceFolder}",
+            "request": "attach",
+            "name": "Attach Firmware",
+            "chip": "STM32F103C8Tx",
+            "coreConfigs": [
+                {
+                    "programBinary": "target/thumbv7m-none-eabi/debug/taiko-midi-controller",
+                    "rttEnabled": true,
+                    "rttChannelFormats": [
+                        {
+                            "channelNumber": 0,
+                            // Format RTT data as String data
+                            "dataFormat": "String",
+                            // Include host-side timestamps for every line of data transferred from the target RTT output
+                            "showTimestamps": true
+                        },
+                    ]
+                }
+            ],
         }
     ]
 }

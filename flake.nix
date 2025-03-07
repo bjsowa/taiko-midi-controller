@@ -74,6 +74,7 @@
           packages = with pkgs; [
             pkgsCross.arm-embedded.buildPackages.gdb
 
+            probe-rs-tools
             gcc-arm-embedded-13
             openocd
           ];

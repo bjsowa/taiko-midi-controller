@@ -132,15 +132,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cortex-m-semihosting"
-version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c23234600452033cc77e4b761e740e02d2c4168e11dbf36ab14a0f58973592b0"
-dependencies = [
- "cortex-m",
-]
-
-[[package]]
 name = "critical-section"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -626,13 +617,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "panic-semihosting"
-version = "0.6.0"
+name = "panic-probe"
+version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ee8a3e1233d9073d76a870223512ce4eeea43c067a94a445c13bd6d792d7b1ab"
+checksum = "4047d9235d1423d66cc97da7d07eddb54d4f154d6c13805c6d0793956f4f25b0"
 dependencies = [
  "cortex-m",
- "cortex-m-semihosting",
+ "defmt",
 ]
 
 [[package]]
@@ -825,7 +816,7 @@ dependencies = [
  "embassy-executor",
  "embassy-stm32",
  "embassy-time",
- "panic-semihosting",
+ "panic-probe",
  "stm32f1xx-hal",
 ]
 
