@@ -14,6 +14,16 @@ embassy_stm32::bind_interrupts!(
     }
 );
 
+const USB_VID: u16 = 0xc0de;
+const USB_PID: u16 = 0xcafe;
+const USB_MANUFACTURER: &str = "bjsowa";
+const USB_PRODUCT: &str = "taiko-midi-controller";
+const USB_SERIAL_NUMBER: &str = "1";
+
+const CONFIG_DESCRIPTOR_SIZE: usize = 256;
+const BOS_DESCRIPTOR_SIZE: usize = 256;
+const CONTROL_BUF_SIZE: usize = 256;
+
 fn set_clocks(config: &mut embassy_stm32::Config) {
     use embassy_stm32::rcc::*;
     config.rcc.hse = Some(Hse {
@@ -40,15 +50,14 @@ async fn main(_spawner: Spawner) {
 
     let driver = embassy_stm32::usb::Driver::new(p.USB, Irqs, p.PA12, p.PA11);
 
-    let usb_config = embassy_usb::Config::new(0xc0de, 0xcafe);
+    let mut usb_config = embassy_usb::Config::new(USB_VID, USB_PID);
+    usb_config.manufacturer = Some(USB_MANUFACTURER);
+    usb_config.product = Some(USB_PRODUCT);
+    usb_config.serial_number = Some(USB_SERIAL_NUMBER);
 
-    // config.rcc.hse = todo!();
-
-    let mut config_descriptor = [0; 256];
-    let mut bos_descriptor = [0; 256];
-    let mut control_buf = [0; 7];
-
-    // let mut state = State::new();
+    let mut config_descriptor = [0; CONFIG_DESCRIPTOR_SIZE];
+    let mut bos_descriptor = [0; BOS_DESCRIPTOR_SIZE];
+    let mut control_buf = [0; CONTROL_BUF_SIZE];
 
     let mut builder = embassy_usb::Builder::new(
         driver,
@@ -59,7 +68,7 @@ async fn main(_spawner: Spawner) {
         &mut control_buf,
     );
 
-    let mut midi_class = embassy_usb::class::midi::MidiClass::new(&mut builder, 0, 1, 64);
+    let mut midi_class = embassy_usb::class::midi::MidiClass::new(&mut builder, 1, 1, 64);
 
     let mut usb = builder.build();
 
@@ -67,12 +76,12 @@ async fn main(_spawner: Spawner) {
 
     let echo_fut = async {
         loop {
-            let write_res = midi_class.write_packet(&[0x90, 0x40, 0x7f]).await;
+            let write_res = midi_class.write_packet(&[0x09, 0x90, 0x40, 0x7f]).await;
             match write_res {
                 Ok(_) => info!("write_packet ok"),
                 Err(err) => info!("write_packet err {}", err),
             }
-            Timer::after_millis(1000).await;
+            Timer::after_millis(50).await;
         }
     };
 
