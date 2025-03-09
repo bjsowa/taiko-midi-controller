@@ -26,6 +26,7 @@ embassy-stm32 = { version = "0.2.0", features = [
     "stm32f103c8",
     "time-driver-any",
 ] }
+embassy-sync = { version = "0.6.2", features = ["defmt"] }
 embassy-time = { version = "0.4.0", features = ["defmt"] }
 embassy-usb = { version = "0.4.0", features = ["defmt"] }
 panic-probe = { version = "0.3.2", features = ["print-defmt"] }
