@@ -2,11 +2,13 @@
 #![no_std]
 
 mod midi;
+mod xinput;
 
 use defmt::info;
 use embassy_executor::Spawner;
 use embassy_stm32::time::Hertz;
 use embassy_time::{Duration, Timer};
+use embassy_usb::driver::EndpointIn;
 
 use {defmt_rtt as _, panic_probe as _};
 
@@ -16,8 +18,8 @@ embassy_stm32::bind_interrupts!(
     }
 );
 
-const USB_VID: u16 = 0xc0de;
-const USB_PID: u16 = 0xcafe;
+const USB_VID: u16 = 0x045E;
+const USB_PID: u16 = 0x028E;
 const USB_MANUFACTURER: &str = "bjsowa";
 const USB_PRODUCT: &str = "taiko-midi-controller";
 const USB_SERIAL_NUMBER: &str = "1";
@@ -75,6 +77,8 @@ async fn main(_spawner: Spawner) {
     let mut bos_descriptor = [0; BOS_DESCRIPTOR_SIZE];
     let mut control_buf = [0; CONTROL_BUF_SIZE];
 
+    let xinput_state = xinput::XInputState {};
+
     let mut builder = embassy_usb::Builder::new(
         driver,
         usb_config,
@@ -83,6 +87,8 @@ async fn main(_spawner: Spawner) {
         &mut [],
         &mut control_buf,
     );
+
+    let xinput_class = xinput::XInputClass::new(&mut builder, &xinput_state);
 
     let midi_class = embassy_usb::class::midi::MidiClass::new(&mut builder, 1, 1, 64);
 
